@@ -1,0 +1,86 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: maria-pv
+spec:
+  capacity:
+    storage: 30Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: 172.16.0.20
+    path: /export/kubedata/maria
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mdb-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 15Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mariadb
+  template:
+    metadata:
+      labels:
+        app: mariadb
+        type: database
+    spec:
+      containers:
+        - name: mariadb
+          image: 172.16.0.18:5000/mariadb
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: cm
+                  key: MARIADB_DB_PASSWORD
+            - name: MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: cm
+                  key: MARIADB_DB_USER
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: cm
+                  key: MARIADB_DB_PASSWORD
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: cm
+                  key: MARIADB_DB_NAME
+          volumeMounts:
+            - mountPath: /data
+              name: dbstore
+      volumes:
+        - name: dbstore
+          persistentVolumeClaim:
+            claimName: mdb-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dbsvc
+spec:
+  type: ClusterIP
+  selector:
+    app: mariadb
+  ports:
+    - name: http
+      protocol: TCP
+      port: 3306

@@ -1,0 +1,37 @@
+{
+    "subreddits": [
+        "aww"
+    ],
+    "users": [
+        {
+            "login": "flyerflew",
+            "password": "9y2c2gxSKU2B8UqS"
+        },
+        {
+            "login": "foxdna",
+            "password": ".CIm0Ih!O1s8Vwir"
+        }
+    ],
+    "comments": [
+        {
+            "author": "flyerflew",
+            "created_utc": 1533085154,
+            "id": "e3dw888",
+            "link_id": "t3_93jz51",
+            "score": 250,
+            "body": "My heart just imploded.  SO cute!",
+            "subreddit": "aww"
+        }
+    ],
+    "submissions": [
+        {
+            "author": "foxdna",
+            "id": "t3_93jz51",
+            "subreddit": "aww",
+            "created_utc": 1533082538,
+            "title": "Big sister drops to her knees to show affection to newborn",
+            "selftext": "",
+            "url": "https://i.redd.it/k117eedzjdd11.jpg"
+        }
+    ]
+}

@@ -1,0 +1,34 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: websvc
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: websvc
+  template:
+    metadata:
+      labels:
+        app: websvc
+    spec:
+      containers:
+        - name: websvc
+          image: 172.16.0.18:5000/websvc
+          ports:
+            - containerPort: 7080
+          envFrom:
+            - configMapRef:
+                name: cm
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: websvc-rest
+spec:
+  selector:
+    app: websvc
+  ports:
+    - protocol: TCP
+      port: 7080

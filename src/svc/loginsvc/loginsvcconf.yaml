@@ -1,0 +1,34 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loginsvc
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: loginsvc
+  template:
+    metadata:
+      labels:
+        app: loginsvc
+    spec:
+      containers:
+        - name: loginsvc
+          image: 172.16.0.18:5000/loginsvc
+          ports:
+            - containerPort: 7070
+          envFrom:
+            - configMapRef:
+                name: cm
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loginsvc-rest
+spec:
+  selector:
+    app: loginsvc
+  ports:
+    - protocol: TCP
+      port: 7070

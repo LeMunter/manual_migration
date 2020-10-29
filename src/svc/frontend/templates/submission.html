@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>{{title}} ({{sub.author}})</h1>
+    <p>
+        {{ sub.fulltext }}
+    </p>
+    <p>
+        <a href="{{ sub.url }}">{{ sub.url }}</a>
+    </p>
+
+    {% for cmt in cmts %}
+    <p>
+        <i>
+            {{ cmt.author }}</i>: {{ cmt.body }}
+    </p>
+    {% endfor %}
+</div>
+{% endblock %}
