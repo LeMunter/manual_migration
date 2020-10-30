@@ -2,22 +2,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: websvc
+  name: exp
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: websvc
+      app: exp
   template:
     metadata:
       labels:
-        app: websvc
+        app: exp
     spec:
       containers:
-        - name: websvc
-          image: 172.16.0.18:5000/websvc
+        - name: exp
+          image: 172.16.0.18:5000/exp
           ports:
-            - containerPort: 7080
+            - containerPort: 8080
           envFrom:
             - configMapRef:
                 name: cm
@@ -32,10 +32,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: websvc-rest
+  name: exp-rest
 spec:
   selector:
-    app: websvc
+    app: exp
   ports:
     - protocol: TCP
-      port: 7080
+      port: 8080

@@ -21,6 +21,13 @@ spec:
           envFrom:
             - configMapRef:
                 name: cm
+          volumeMounts:
+            - mountPath: "/config"
+              name: confvol
+      volumes:
+        - name: confvol
+          configMap:
+            name: cm
 ---
 apiVersion: v1
 kind: Service

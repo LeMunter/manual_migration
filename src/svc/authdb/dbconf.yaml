@@ -65,12 +65,17 @@ spec:
                   name: cm
                   key: MARIADB_DB_NAME
           volumeMounts:
-            - mountPath: /data
+            - mountPath: /var/lib/mysql/
               name: dbstore
+            - mountPath: /config
+              name: confvol
       volumes:
         - name: dbstore
           persistentVolumeClaim:
             claimName: mdb-pvc
+        - name: confvol
+          configMap:
+            name: cm
 ---
 apiVersion: v1
 kind: Service

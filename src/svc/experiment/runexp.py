@@ -2,11 +2,11 @@ import requests
 import json
 import os
 
-login_host = os.environ.get('LOGIN_SERVER_ADDR')
-login_port = os.environ.get('LOGIN_SERVER_PORT')
+login_host = '10.106.110.202'
+login_port = '7070'
 
-poster_host = os.environ.get('POST_SERVER_ADDR')
-poster_port = os.environ.get('POST_SERVER_PORT')
+poster_host = '10.100.128.199'
+poster_port = '7075'
 
 login_svc = f'http://{login_host}:{login_port}'
 poster_svc = f'http://{poster_host}:{poster_port}'
@@ -57,7 +57,7 @@ def post_comment(token, c):
         exit()
 
 
-with open('small.json') as f:
+with open('data.json') as f:
     jo = json.load(f)
 
 usrdb = {}

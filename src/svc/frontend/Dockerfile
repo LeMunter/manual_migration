@@ -4,4 +4,4 @@ RUN pip install -r /tmp/requirements.txt
 COPY . /tmp/
 ADD templates ./templates
 COPY web_svc.py .
-ENTRYPOINT ["python","gunicorn","0.0.0:7080","web_svc.py"]
+ENTRYPOINT ["gunicorn","web_svc.py"]

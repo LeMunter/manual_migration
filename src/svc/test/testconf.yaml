@@ -2,40 +2,40 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: websvc
+  name: test
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: websvc
+      app: test
   template:
     metadata:
       labels:
-        app: websvc
+        app: test
     spec:
       containers:
-        - name: websvc
-          image: 172.16.0.18:5000/websvc
+        - name: test
+          image: 172.16.0.18:5000/test
           ports:
-            - containerPort: 7080
+            - containerPort: 65531
           envFrom:
             - configMapRef:
-                name: cm
+                name: testcm
           volumeMounts:
             - mountPath: "/config"
               name: confvol
       volumes:
         - name: confvol
           configMap:
-            name: cm
+            name: testcm
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: websvc-rest
+  name: test-rest
 spec:
   selector:
-    app: websvc
+    app: test
   ports:
     - protocol: TCP
-      port: 7080
+      port: 65531
