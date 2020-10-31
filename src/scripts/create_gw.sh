@@ -3,7 +3,7 @@
 source /keys/am223yd-1dv032-ht20-openrc.sh
 
 #name=$(jq -r '.[] | select(."name" == "gw") | ."name"' /mounted/server_vars.json)
-name="testarigen"
+name="testargw"
 flavor=$(jq -r '.[] | select(."name" == "gw") | ."flavor"' /mounted/server_vars.json)
 image=$(jq -r '.[] | select(."name" == "gw") | ."image"' /mounted/server_vars.json)
 initFile=$(jq -r '.[] | select(."name" == "gw") | ."init_file"' /mounted/server_vars.json)
@@ -23,8 +23,11 @@ echo "Init File: $initFile"
 echo "Key: $key"
 echo "Network: $network"
 
+#Remove old known host if it exists
+ssh-keygen -R "$floatIp"
 
-#echo "Creating server"
+
+echo "Creating server"
 openstack server create --image "$image" --flavor "$flavor" --availability-zone Education --security-group "$sg" --security-group default --key-name "$key" --network "$network" "$name" --user-data /mounted/base-init.sh
 
 var=$(openstack server show -f value -c status $name)
@@ -35,5 +38,12 @@ while [ "$var" != "ACTIVE" ];
     var=$(openstack server show -f value -c status $name)
 done
 
+fixedIp=$(openstack server show gw -f json | jq -r '.addresses' | sed 's/.*=//')
+
+
 echo "Assigning float ip"
 openstack server add floating ip "$name" "$floatIp"
+
+
+echo "Adding known hosts"
+ssh-keyscan -H "$floatIp" >> ~/.ssh/known_hosts

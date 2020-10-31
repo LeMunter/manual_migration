@@ -1,24 +1,11 @@
    
-    multipass launch --name <name>   
-    multipass mount C:/Users/anton/"OneDrive - student.lnu.se"/Kurser/1dv032/exam-3/src/ anton:/mounted/
-
+    multipass launch --name vm   
+    multipass mount C:/Users/anton/"OneDrive - student.lnu.se"/Kurser/1dv032/exam-3/src/ vm:/mounted/
+    multipass mount C:/Users/anton/OneDrive/Desktop/mounted vm:/keys
+    multipass shell vm
+    
 ####Install multipass vm
-
-    sudo apt-get update && sudo apt upgrade -y
-    sudo apt-get install -y net-tools
-    sudo apt install -y python3-pip python3-dev
-    sudo pip3 install --upgrade pip
-    sudo pip3 install python-openstackclient
-    sudo apt-get install -qq apt-transport-https ca-certificates curl software-properties-common jq
-      
-    source /keys/am223yd-1dv032-ht20-openrc.sh
-      -Enter password
-       
-    # Add key to vm
-    cp /keys/secrets/test.pem ~/.ssh/id_rsa
-    sudo chmod 600 ~/.ssh/id_rsa
-    eval $(ssh-agent -s)
-    ssh-add ~/.ssh/id_rsa
+    bash /mounted/scripts/multipass_init.sh
     # Copy key to cloud gateway
     scp ~/.ssh/id_rsa ubuntu@194.47.177.127:
        
