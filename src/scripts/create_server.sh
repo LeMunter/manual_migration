@@ -26,7 +26,6 @@ echo "Assigning float ip"
 floatIp=$(openstack floating ip list -f value -c "Floating IP Address")
 openstack server add floating ip "$name" "$floatIp"
 
-
 #Add host when netcat successfully scan port 22
 until nc -z -v "$floatIp" 22 ; do
   echo "Server is still building.. retrying in 10 seconds"

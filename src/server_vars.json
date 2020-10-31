@@ -1,0 +1,52 @@
+[
+  {
+    "name" : "gw",
+    "image" : "ca4bec1a-ac25-434f-b14c-ad8078ccf39f",
+    "flavor" : "c1-r1-d10",
+    "key" : "test",
+    "sg" : "",
+    "ip" : "",
+    "float_ip" : "",
+    "init_file" : "base-init.sh"
+  },
+  {
+    "name": "nfs",
+    "image": "ca4bec1a-ac25-434f-b14c-ad8078ccf39f",
+    "flavor": "c2-r2-d80",
+    "key": "test",
+    "sg": "",
+    "ip": "172.16.0.18",
+    "float_ip": "",
+    "init_file" : "base-init.sh"
+  },
+  {
+    "name": "dr",
+    "image": "ca4bec1a-ac25-434f-b14c-ad8078ccf39f",
+    "flavor": "c2-r2-d20",
+    "key": "test",
+    "sg": "",
+    "ip": "",
+    "float_ip": "",
+    "init_file" : "base-init.sh"
+  },
+  {
+    "name": "master",
+    "image": "ca4bec1a-ac25-434f-b14c-ad8078ccf39f",
+    "flavor": "c2-r2-d20",
+    "key": "test",
+    "sg": "",
+    "ip": "",
+    "float_ip": "",
+    "init_file" : "master-init.sh"
+  },
+  {
+    "name": "node",
+    "image": "ca4bec1a-ac25-434f-b14c-ad8078ccf39f",
+    "flavor": "c2-r2-d20",
+    "key": "test",
+    "sg": "",
+    "ip": "",
+    "float_ip": "",
+    "init_file" : "node-init.sh"
+  }
+]

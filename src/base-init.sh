@@ -26,13 +26,10 @@ cat <<EOF | sudo tee /etc/docker/daemon.json
   "log-opts": {
     "max-size": "100m"
   },
-  "storage-driver": "overlay2",
-  "insecure-registries": ["197.16.0.18:5000"]
+  "storage-driver": "overlay2"
 }
 EOF
 sudo mkdir -p /etc/systemd/system/docker.service.d
-
-sudo apt install -y nfs-common
 
 # Starta om och autostata docker
 systemctl daemon-reload
