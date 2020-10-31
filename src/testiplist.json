@@ -1,0 +1,26 @@
+[
+  {
+    "ID": "71adadd3-77d3-4b9a-b43b-fe5128d6d5c1",
+    "Floating IP Address": "194.47.177.127",
+    "Fixed IP Address": "172.16.0.14",
+    "Port": "a1810cc1-517f-4f3a-b586-79dced1ef628",
+    "Floating Network": "fd401e50-9484-4883-9672-a2814089528c",
+    "Project": "6da0032ab1ae4ce4a27fec1861372364"
+  },
+  {
+    "ID": "9ab6ecd3-5862-4a86-a52a-8e87f4a7a4ab",
+    "Floating IP Address": "194.47.177.162",
+    "Fixed IP Address": null,
+    "Port": null,
+    "Floating Network": "fd401e50-9484-4883-9672-a2814089528c",
+    "Project": "6da0032ab1ae4ce4a27fec1861372364"
+  },
+  {
+    "ID": "d7add44d-206c-425f-b334-707417f17af9",
+    "Floating IP Address": "194.47.176.228",
+    "Fixed IP Address": "172.16.0.16",
+    "Port": "2a1dc265-94fd-48ac-8b08-4af79565acef",
+    "Floating Network": "fd401e50-9484-4883-9672-a2814089528c",
+    "Project": "6da0032ab1ae4ce4a27fec1861372364"
+  }
+]
