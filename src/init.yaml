@@ -1,0 +1,19 @@
+#cloud-config
+
+groups:
+  - ControlVM
+  - CPGroup
+users:
+  - name: master
+    gecos: master
+    shell: /bin/bash
+    primary-group: ControlVM
+    sudo: ALL=(ALL) NOPASSWD:ALL
+  - name: client
+    gecos: MoreInfoOfClient
+    shell: /bin/bash
+    primary-group: CPGroup
+    ssh_authorized_keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCiDM6Gp++ypsLk95uvVjyXMiRN+OawhZCI8Hhmk255GvFJIUijU7R7Ac5cKwH1EwW4A6Mpce1+DZkIYY4OmCc2zKvaW/ua4jqk9hbKhosVpgGTCGHSkOnsW6IjFbc3BEeLcFx6PqavPdtRBm1qwZ9f8kkIjZ3dICgXjDOPaYBDCga2EDO44mDcNzHDpj91UXo3V/a53nEucRcGyvEGBvaPIXpIrrDX1lK5BaDWO7rGaOPRPlAXcmZaXCbl/rQCuyTrqVjNZV4BiWxyQNN81LEt1iFNore0jZKE35/N89RL9kvQAuB7bMPizYAcK6b182OKnhTmHMVDvxAdq3xSXTL4A9zOo9vUvMouGg0 user@user.com
+
+final_message: "The system is finally up, after $UPTIME seconds with no errors mitt test"
