@@ -6,7 +6,7 @@
     "key": "test",
     "sg": "SSH2",
     "ip": "172.16.0.21",
-    "float_ip": "194.47.177.162",
+    "float_ip": "194.47.177.127",
     "network": "kub_net",
     "init_file": "gw-init.sh"
   },
@@ -16,7 +16,7 @@
     "flavor": "c2-r2-d80",
     "key": "test",
     "sg": "",
-    "ip": "172.16.0.5",
+    "ip": "172.16.0.9",
     "float_ip": "",
     "network": "kub_net",
     "init_file": "nfs-init.sh"
@@ -27,10 +27,10 @@
     "flavor": "c2-r2-d20",
     "key": "test",
     "sg": "",
-    "ip": "",
+    "ip": "172.16.0.10",
     "float_ip": "",
     "network": "kub_net",
-    "init_file": "base-init.sh"
+    "init_file": "registry-init.sh"
   },
   {
     "name": "master",

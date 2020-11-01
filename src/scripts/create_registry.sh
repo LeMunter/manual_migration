@@ -1,22 +1,25 @@
 #!/bin/bash
 
-server_vars="$1"
-if test -z "$server_vars"
-then
-  echo "Must provide server variables"
-  exit 1
-fi
+#server_vars="$1"
+#if test -z "$server_vars"
+#then
+#  echo "Must provide server variables"
+#  exit 1
+#fi
+
+server_vars="/mounted/server_vars.json"
 #Login to openstack client
 source /keys/am223yd-1dv032-ht20-openrc.sh
 
-name=$(jq -r '.[] | select(."name" == "gw") | ."name"' "$server_vars")
-flavor=$(jq -r '.[] | select(."name" == "nfs") | ."flavor"' "$server_vars")
-image=$(jq -r '.[] | select(."name" == "nfs") | ."image"' "$server_vars")
-initFile=$(jq -r '.[] | select(."name" == "nfs") | ."init_file"' "$server_vars")
-key=$(jq -r '.[] | select(."name" == "nfs") | ."key"' "$server_vars")
-network=$(jq -r '.[] | select(."name" == "nfs") | ."network"' "$server_vars")
+#name=$(jq -r '.[] | select(."name" == "gw") | ."name"' "$server_vars")
+name="testarreg"
+flavor=$(jq -r '.[] | select(."name" == "dr") | ."flavor"' "$server_vars")
+image=$(jq -r '.[] | select(."name" == "dr") | ."image"' "$server_vars")
+initFile=$(jq -r '.[] | select(."name" == "dr") | ."init_file"' "$server_vars")
+key=$(jq -r '.[] | select(."name" == "dr") | ."key"' "$server_vars")
+network=$(jq -r '.[] | select(."name" == "dr") | ."network"' "$server_vars")
 
-#Get gateways float-ip
+#Get gateway float-ip
 gwIP=$(jq -r '.[] | select(."name" == "gw") | ."float_ip"' "$server_vars")
 
 
@@ -29,7 +32,7 @@ echo "Network: $network"
 
 
 echo "Creating server"
-openstack server create --image "$image" --flavor "$flavor" --availability-zone Education --security-group default --key-name "$key" --network "$network" --user-data /mounted/servers/nfs/"$initFile" "$name"
+openstack server create --image "$image" --flavor "$flavor" --availability-zone Education --security-group default --key-name "$key" --network "$network" --user-data /mounted/servers/registry/"$initFile" "$name"
 
 var=$(openstack server show -f value -c status $name)
 dot="."
@@ -45,9 +48,12 @@ fixedIp=$(openstack server show $name -f json | jq -r '.addresses' | sed 's/.*=/
 echo "Fixed IP: $fixedIp"
 # shellcheck disable=SC2046
 cp /mounted/server_vars.json /mounted/server_vars_backup.json
+#Add fixed-ip to server-variables
 # shellcheck disable=SC2046
-cat <<< $(jq '.[1].ip ="'"$fixedIp"'"' "$server_vars") > "$server_vars"
-
+cat <<< $(jq '.[2].ip ="'"$fixedIp"'"' "$server_vars") > "$server_vars"
+#Update docker daemon
+# shellcheck disable=SC2046
+cat <<< $(jq '."insecure-registries"[0] ="'"$fixedIp"':'"5000"'"' /mounted/servers/master/daemon.json) > /mounted/servers/master/daemon.json
 
 #Add host when netcat successfully scan port 22
 echo "Scanning port 22"
