@@ -4,9 +4,9 @@
     "image": "ca4bec1a-ac25-434f-b14c-ad8078ccf39f",
     "flavor": "c1-r1-d10",
     "key": "test",
-    "sg": "SSH2",
-    "ip": "172.16.0.21",
-    "float_ip": "194.47.177.162",
+    "sg": "",
+    "ip": "172.16.0.15",
+    "float_ip": "",
     "network": "kub_net",
     "init_file": "base-init.sh"
   },

@@ -16,7 +16,7 @@ add-apt-repository -yu "deb [arch=amd64] https://download.docker.com/linux/ubunt
 add-apt-repository -yu "deb https://apt.kubernetes.io/ kubernetes-xenial main"
 
 # Installera nödvändiga paket
-apt-get install -qq docker-ce kubelet kubeadm kubectl
+apt-get install -qq docker-ce kubelet kubeadm kubectl nfs-common
 
 # Ändra så att docker använder systemd
 cat <<EOF | sudo tee /etc/docker/daemon.json

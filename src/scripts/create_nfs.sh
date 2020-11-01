@@ -3,23 +3,15 @@
 source /keys/am223yd-1dv032-ht20-openrc.sh
 
 #name=$(jq -r '.[] | select(."name" == "gw") | ."name"' /mounted/server_vars.json)
-name="testgw"
+name="testarnfs"
 flavor=$(jq -r '.[] | select(."name" == "gw") | ."flavor"' /mounted/server_vars.json)
 image=$(jq -r '.[] | select(."name" == "gw") | ."image"' /mounted/server_vars.json)
 initFile=$(jq -r '.[] | select(."name" == "gw") | ."init_file"' /mounted/server_vars.json)
 key=$(jq -r '.[] | select(."name" == "gw") | ."key"' /mounted/server_vars.json)
 network=$(jq -r '.[] | select(."name" == "gw") | ."network"' /mounted/server_vars.json)
-
-#Check if a ssh security already exists. Otherwise creating one
-sg=$(openstack security group list -f json | jq -r '.[] | select(."Name" == "SSH2") | ."Name"')
-if test -z "$sg"
-then
-  echo "Creating new Security Group"
-  sg=$(openstack security group create SSH2 -f json | jq -r '.name')
-  openstack security group rule create SSH2 --protocol tcp --dst-port 22
-fi
-# shellcheck disable=SC2046
-cat <<< $(jq '.[0].sg = "'"$sg"'"' /mounted/server_vars.json) > /mounted/server_vars.json
+#Get a float ip without an associated fixed ip
+gateIP=$(jq -r '.[] | select(."name" == gw) | ."float_ip"' /mounted/server_vars.json)
+sg=$(openstack security group list -f json | jq -r '.[] | select(."Name" == "SSH") | ."Name"')
 
 
 echo "Name: $name"
@@ -29,9 +21,6 @@ echo "Image: $image"
 echo "Init File: $initFile"
 echo "Key: $key"
 echo "Network: $network"
-
-#Remove the old known host (if it exists)
-ssh-keygen -R "$floatIp"
 
 
 echo "Creating server"
@@ -45,36 +34,28 @@ while [ "$var" != "ACTIVE" ];
     var=$(openstack server show -f value -c status $name)
 done
 
-#Get fixed ip
 fixedIp=$(openstack server show $name -f json | jq -r '.addresses' | sed 's/.*=//')
 echo "Fixed IP: $fixedIp"
-
-#Assing fixed ip to server-variables
 # shellcheck disable=SC2046
 cat <<< $(jq '.[0].ip ="'"$fixedIp"'"' /mounted/server_vars.json) > /mounted/server_vars.json
 
-#Check to see if there are any free float ips. Create a new otherwise
-floatIp=$(openstack floating ip list -f json | jq -r '.[] | select(."Fixed IP Address" == null) | ."Floating IP Address"' | sed -n 1p)
-if test -z "$floatIp"
-then
-  echo "Creating new floating IP"
-  floatIp=$(openstack floating ip create public -f json | jq '.floating_ip_address')
-fi
-
-#Assing float ip to server-variables
-echo "Assigning float ip: $floatIp"
-cat <<< $(jq '.[0].float_ip = "'"$floatIp"'"' /mounted/server_vars.json) > /mounted/server_vars.json
-
-#Assign float ip to server
-openstack server add floating ip "$name" "$floatIp"
 
 #Add host when netcat successfully scan port 22
-until nc -z -v "$floatIp" 22 ; do
+echo "Scanning port 22"
+until ssh 194.47.177.127 nc -z -v "$fixedIp" 22 ; do
   echo "Server is still building.. retrying in 10 seconds"
   sleep 10
 done
+
+
+#Remove old known host if it exists
+ssh 194.47.177.127 ssh-keygen -R "$floatIp"
+
 echo "Adding known hosts"
-ssh-keyscan -H "$floatIp" >> ~/.ssh/known_hosts
+ssh 194.47.177.127 ssh-keyscan -H "$floatIp" >> ~/.ssh/known_hosts
+
+#ssh -J 194.47.177.127 172.16.0.20 cloud-init status -w
 
 #echo "Waiting for cloud init script"
 #ssh "$floatIp" cloud-init status -w
+echo "done"

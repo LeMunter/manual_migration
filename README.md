@@ -5,7 +5,7 @@
     multipass shell vm
     
 ####Install multipass vm
-    bash /mounted/scripts/multipass_init.sh
+    bash /mounted/multipass_init.sh
     # Copy key to cloud gateway
     scp ~/.ssh/id_rsa ubuntu@194.47.177.127:
        
