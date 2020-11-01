@@ -16,10 +16,10 @@
     "flavor": "c2-r2-d80",
     "key": "test",
     "sg": "",
-    "ip": "172.16.0.20",
+    "ip": "172.16.0.5",
     "float_ip": "",
     "network": "kub_net",
-    "init_file": "base-init.sh"
+    "init_file": "nfs-init.sh"
   },
   {
     "name": "dr",
