@@ -8,7 +8,7 @@
     "ip": "172.16.0.21",
     "float_ip": "194.47.177.162",
     "network": "kub_net",
-    "init_file": "base-init.sh"
+    "init_file": "gw-init.sh"
   },
   {
     "name": "nfs",

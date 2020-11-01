@@ -23,7 +23,7 @@ echo "Network: $network"
 
 
 echo "Creating server"
-openstack server create --image "$image" --flavor "$flavor" --availability-zone Education --security-group default --key-name "$key" --network "$network" --user-data /mounted/"$initFile" "$name"
+openstack server create --image "$image" --flavor "$flavor" --availability-zone Education --security-group default --key-name "$key" --network "$network" --user-data /mounted/servers/nfs/"$initFile" "$name"
 
 var=$(openstack server show -f value -c status $name)
 while [ "$var" != "ACTIVE" ];
@@ -36,6 +36,7 @@ done
 fixedIp=$(openstack server show $name -f json | jq -r '.addresses' | sed 's/.*=//')
 echo "Fixed IP: $fixedIp"
 # shellcheck disable=SC2046
+cp /mounted/server_vars.json /mounted/server_vars_backup.json
 cat <<< $(jq '.[1].ip ="'"$fixedIp"'"' /mounted/server_vars.json) > /mounted/server_vars.json
 
 

@@ -35,7 +35,7 @@ ssh-keygen -R "$floatIp"
 
 
 echo "Creating server"
-openstack server create --image "$image" --flavor "$flavor" --availability-zone Education --security-group "$sg" --security-group default --key-name "$key" --network "$network" "$name" --user-data /mounted/"$initFile"
+openstack server create --image "$image" --flavor "$flavor" --availability-zone Education --security-group "$sg" --security-group default --key-name "$key" --network "$network" --user-data /mounted/servers/gw/"$initFile" "$name"
 
 var=$(openstack server show -f value -c status $name)
 while [ "$var" != "ACTIVE" ];
@@ -51,6 +51,7 @@ echo "Fixed IP: $fixedIp"
 
 #Assing fixed ip to server-variables
 # shellcheck disable=SC2046
+cp /mounted/server_vars.json /mounted/server_vars_backup.json
 cat <<< $(jq '.[0].ip ="'"$fixedIp"'"' /mounted/server_vars.json) > /mounted/server_vars.json
 
 #Check to see if there are any free float ips. Create a new otherwise
@@ -63,6 +64,7 @@ fi
 
 #Assing float ip to server-variables
 echo "Assigning float ip: $floatIp"
+cp /mounted/server_vars.json /mounted/server_vars_backup.json
 cat <<< $(jq '.[0].float_ip = "'"$floatIp"'"' /mounted/server_vars.json) > /mounted/server_vars.json
 
 #Assign float ip to server
