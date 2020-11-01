@@ -9,7 +9,7 @@ fi
 #Login to openstack client
 source /keys/am223yd-1dv032-ht20-openrc.sh
 
-name=$(jq -r '.[] | select(."name" == "gw") | ."name"' "$server_vars")
+name=$(jq -r '.[] | select(."name" == "nfs") | ."name"' "$server_vars")
 flavor=$(jq -r '.[] | select(."name" == "nfs") | ."flavor"' "$server_vars")
 image=$(jq -r '.[] | select(."name" == "nfs") | ."image"' "$server_vars")
 initFile=$(jq -r '.[] | select(."name" == "nfs") | ."init_file"' "$server_vars")
@@ -28,18 +28,18 @@ echo "Key: $key"
 echo "Network: $network"
 
 
-echo "Creating server"
 openstack server create --image "$image" --flavor "$flavor" --availability-zone Education --security-group default --key-name "$key" --network "$network" --user-data /mounted/servers/nfs/"$initFile" "$name"
 
-var=$(openstack server show -f value -c status $name)
+echo -n "building server"
 dot="."
+var=$(openstack server show -f value -c status $name)
 while [ "$var" != "ACTIVE" ];
   do
-    echo $dot
-    dot+="."
-    sleep 3
+    echo -n $dot
+    sleep 2
     var=$(openstack server show -f value -c status $name)
 done
+echo ""
 
 fixedIp=$(openstack server show $name -f json | jq -r '.addresses' | sed 's/.*=//')
 echo "Fixed IP: $fixedIp"

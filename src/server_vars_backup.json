@@ -27,7 +27,7 @@
     "flavor": "c2-r2-d20",
     "key": "test",
     "sg": "",
-    "ip": "172.16.0.11",
+    "ip": "172.16.0.10",
     "float_ip": "",
     "network": "kub_net",
     "init_file": "registry-init.sh"
@@ -38,7 +38,7 @@
     "flavor": "c2-r2-d20",
     "key": "test",
     "sg": "",
-    "ip": "",
+    "ip": "172.16.0.15",
     "float_ip": "",
     "network": "kub_net",
     "init_file": "master-init.sh"

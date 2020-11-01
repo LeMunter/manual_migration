@@ -18,22 +18,9 @@ add-apt-repository -yu "deb https://apt.kubernetes.io/ kubernetes-xenial main"
 # Installera nödvändiga paket
 apt-get install -qq docker-ce kubelet kubeadm kubectl nfs-common
 
-# Ändra så att docker använder systemd
-cat <<EOF | sudo tee /etc/docker/daemon.json
-{
-  "exec-opts": ["native.cgroupdriver=systemd"],
-  "log-driver": "json-file",
-  "log-opts": {
-    "max-size": "100m"
-  },
-  "storage-driver": "overlay2"
-}
-EOF
 sudo mkdir -p /etc/systemd/system/docker.service.d
 
 # Starta om och autostata docker
 systemctl daemon-reload
 systemctl restart docker
 systemctl enable docker
-
-# Här kan du lägga till en kubeadm join, t.ex.

@@ -1,3 +1,3 @@
 #!/bin/bash
-server_vars="$1"
-echo "$server_vars"
+var="$1"
+echo "$var"

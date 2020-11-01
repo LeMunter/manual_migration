@@ -41,17 +41,28 @@ ssh-keygen -R "$floatIp"
 
 
 echo "Creating server"
-openstack server create --image "$image" --flavor "$flavor" --availability-zone Education --security-group "$sg" --security-group default --key-name "$key" --network "$network" --user-data /mounted/servers/gw/"$initFile" "$name"
+server=$"openstack server create --image $image --flavor $flavor --availability-zone Education --security-group $sg --security-group default --key-name $key --network $network --user-data /mounted/servers/gw/$initFile $name"
+eval $server
 
-var=$(openstack server show -f value -c status $name)
+echo -n "building server"
 dot="."
+i=0
+var=$(openstack server show -f value -c status $name1)
 while [ "$var" != "ACTIVE" ];
   do
-    echo $dot
-    dot+="."
-    sleep 3
-    var=$(openstack server show -f value -c status $name)
+    echo -n $dot
+    sleep 2
+    ((i=i+1))
+    if [ "$i" == 6 ]
+      then
+      echo "Rebuilding $name1"
+      openstack server delete "$name1"
+      eval "$server"
+      i=0
+    fi
+    var=$(openstack server show -f value -c status $name1)
 done
+echo ""
 
 #Get fixed ip
 fixedIp=$(openstack server show $name -f json | jq -r '.addresses' | sed 's/.*=//')
@@ -85,6 +96,3 @@ until nc -z -v "$floatIp" 22 ;
 done
 echo "Adding known hosts"
 ssh-keyscan -H "$floatIp" >> ~/.ssh/known_hosts
-
-#echo "Waiting for cloud init script"
-#ssh "$floatIp" cloud-init status -w

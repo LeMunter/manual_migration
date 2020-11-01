@@ -1,22 +1,23 @@
 #!/bin/bash
 
-server_vars="$1"
-if test -z "$server_vars"
-then
-  echo "Must provide server variables"
-  exit 1
-fi
-
+#server_vars="$1"
+#if test -z "$server_vars"
+#then
+#  echo "Must provide server variables"
+#  exit 1
+#fi
 server_vars="/mounted/server_vars.json"
+
 #Login to openstack client
 source /keys/am223yd-1dv032-ht20-openrc.sh
 
-name=$(jq -r '.[] | select(."name" == "dr") | ."name"' "$server_vars")
-flavor=$(jq -r '.[] | select(."name" == "dr") | ."flavor"' "$server_vars")
-image=$(jq -r '.[] | select(."name" == "dr") | ."image"' "$server_vars")
-initFile=$(jq -r '.[] | select(."name" == "dr") | ."init_file"' "$server_vars")
-key=$(jq -r '.[] | select(."name" == "dr") | ."key"' "$server_vars")
-network=$(jq -r '.[] | select(."name" == "dr") | ."network"' "$server_vars")
+#name=$(jq -r '.[] | select(."name" == "master") | ."name"' "$server_vars")
+name="mastertest"
+flavor=$(jq -r '.[] | select(."name" == "master") | ."flavor"' "$server_vars")
+image=$(jq -r '.[] | select(."name" == "master") | ."image"' "$server_vars")
+initFile=$(jq -r '.[] | select(."name" == "master") | ."init_file"' "$server_vars")
+key=$(jq -r '.[] | select(."name" == "master") | ."key"' "$server_vars")
+network=$(jq -r '.[] | select(."name" == "master") | ."network"' "$server_vars")
 
 #Get gateway float-ip
 gwIP=$(jq -r '.[] | select(."name" == "gw") | ."float_ip"' "$server_vars")
@@ -29,9 +30,7 @@ echo "Init File: $initFile"
 echo "Key: $key"
 echo "Network: $network"
 
-
-echo "Creating server"
-openstack server create --image "$image" --flavor "$flavor" --availability-zone Education --security-group default --key-name "$key" --network "$network" --user-data /mounted/servers/registry/"$initFile" "$name"
+openstack server create --image "$image" --flavor "$flavor" --availability-zone Education --security-group default --key-name "$key" --network "$network" --user-data /mounted/servers/master/"$initFile" "$name"
 
 echo -n "building server"
 dot="."
@@ -50,10 +49,7 @@ echo "Fixed IP: $fixedIp"
 cp /mounted/server_vars.json /mounted/server_vars_backup.json
 #Add fixed-ip to server-variables
 # shellcheck disable=SC2046
-cat <<< $(jq '.[2].ip ="'"$fixedIp"'"' "$server_vars") > "$server_vars"
-#Update docker daemon
-# shellcheck disable=SC2046
-cat <<< $(jq '."insecure-registries"[0] ="'"$fixedIp"':'"5000"'"' /mounted/servers/master/daemon.json) > /mounted/servers/master/daemon.json
+cat <<< $(jq '.[3].ip ="'"$fixedIp"'"' "$server_vars") > "$server_vars"
 
 #Add host when netcat successfully scan port 22
 echo "Scanning port 22"
@@ -68,6 +64,3 @@ ssh "$gwIP" ssh-keygen -R "$fixedIp"
 
 echo "Adding known hosts"
 ssh "$gwIP" ssh-keyscan -H "$fixedIp" >> ~/.ssh/known_hosts
-
-echo "Waiting for cloud init script"
-ssh -J "$gwIP" "$fixedIp" cloud-init status -w
