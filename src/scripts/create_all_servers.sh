@@ -31,7 +31,17 @@ bash /mounted/scripts/move_docker_daemon.sh "$gwIP" "$node1_IP"
 bash /mounted/scripts/move_docker_daemon.sh "$gwIP" "$node2_IP"
 bash /mounted/scripts/move_docker_daemon.sh "$gwIP" "$node3_IP"
 
+#Check to see if there are any free float ips. Create a new otherwise
+floatIp=$(openstack floating ip list -f json | jq -r '.[] | select(."Fixed IP Address" == null) | ."Floating IP Address"' | sed -n 1p)
+if test -z "$floatIp"
+then
+  echo "Creating new floating IP"
+  floatIp=$(openstack floating ip create public -f json | jq '.floating_ip_address')
+fi
+cat <<< $(jq '.[7].float_ip = "'"$floatIp"'"' "$server_vars") > "$server_vars"
+
 #Init and join for master and nodes
 bash /mounted/scripts/initialize_kub.sh
-
+#Update all kube configs and move files to master
+bash /mounted/scripts/update_conf_files.sh
 bash /mounted/scripts/move_files.sh

@@ -5,13 +5,7 @@ server_vars="/mounted/server_vars.json"
 
 dr=$(jq -r '.[] | select(."name" == "dr") | ."ip"' "$server_vars")
 nfs=$(jq -r '.[] | select(."name" == "nfs") | ."ip"' "$server_vars")
-#Check to see if there are any free float ips. Create a new otherwise
-floatIp=$(openstack floating ip list -f json | jq -r '.[] | select(."Fixed IP Address" == null) | ."Floating IP Address"' | sed -n 1p)
-if test -z "$floatIp"
-then
-  echo "Creating new floating IP"
-  floatIp=$(openstack floating ip create public -f json | jq '.floating_ip_address')
-fi
+floatIp=$(jq -r '.[] | select(."name" == "proxy") | ."float_ip"' "$server_vars")
 
 #Update mariadb config
 cat <<< $(sudo cat /mounted/svc/mariadb/dbconf.yaml | yq w -d0 - spec.nfs.server $nfs) > /mounted/svc/mariadb/dbconf.yaml
@@ -29,5 +23,4 @@ cat <<< $(sudo cat /mounted/svc/loginsvc/loginsvcconf.yaml | yq w -d0 - spec.tem
 #Update websvc config
 cat <<< $(sudo cat /mounted/svc/frontend/webconf.yaml | yq w -d0 - spec.template.spec.containers[0].image "$dr":5000/websvc) > /mounted/svc/frontend/webconf.yaml
 
-cat <<< $(jq '.[7].float_ip = "'"$floatIp"'"' "$server_vars") > "$server_vars"
 cat <<< $(sudo cat /mounted/svc/config.yaml | yq w -d0 - data.FRONTEND_SERVER_ADDR "$floatIp") > /mounted/svc/config.yaml
