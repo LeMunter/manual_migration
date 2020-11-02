@@ -7,6 +7,7 @@ sudo pip3 install python-openstackclient
 sudo apt-get install -qq apt-transport-https ca-certificates curl software-properties-common jq
 pip install python-octaviaclient
 snap install yq
+sudo apt-get install -y python-sponge
 
 source /keys/am223yd-1dv032-ht20-openrc.sh
 # Add key to vm

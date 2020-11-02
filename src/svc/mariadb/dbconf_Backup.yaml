@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -8,7 +9,7 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    server: 172.16.10.9
+    server: 172.16.0.20
     path: /export/kubedata/maria
 ---
 apiVersion: v1
@@ -39,7 +40,7 @@ spec:
     spec:
       containers:
         - name: mariadb
-          image: 172.16.10.5:5000/mariadb
+          image: 172.16.0.18:5000/mariadb
           ports:
             - containerPort: 3306
           env:
