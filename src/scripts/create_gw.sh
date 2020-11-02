@@ -44,25 +44,7 @@ echo "Creating server"
 server=$"openstack server create --image $image --flavor $flavor --availability-zone Education --security-group $sg --security-group default --key-name $key --network $network --user-data /mounted/servers/gw/$initFile $name"
 eval $server
 
-echo -n "building server"
-dot="."
-i=0
-var=$(openstack server show -f value -c status $name1)
-while [ "$var" != "ACTIVE" ];
-  do
-    echo -n $dot
-    sleep 2
-    ((i=i+1))
-    if [ "$i" == 6 ]
-      then
-      echo "Rebuilding $name1"
-      openstack server delete "$name1"
-      eval "$server"
-      i=0
-    fi
-    var=$(openstack server show -f value -c status $name1)
-done
-echo ""
+bash /mounted/scripts/check_server.sh "$name" "$server"
 
 #Get fixed ip
 fixedIp=$(openstack server show $name -f json | jq -r '.addresses' | sed 's/.*=//')

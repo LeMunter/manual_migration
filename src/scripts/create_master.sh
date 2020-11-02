@@ -30,18 +30,10 @@ echo "Init File: $initFile"
 echo "Key: $key"
 echo "Network: $network"
 
-openstack server create --image "$image" --flavor "$flavor" --availability-zone Education --security-group default --key-name "$key" --network "$network" --user-data /mounted/servers/master/"$initFile" "$name"
+server=$"openstack server create --image $image --flavor $flavor --availability-zone Education --security-group default --key-name $key --network $network --user-data /mounted/servers/master/$initFile $name"
+eval $server
 
-echo -n "building server"
-dot="."
-var=$(openstack server show -f value -c status $name)
-while [ "$var" != "ACTIVE" ];
-  do
-    echo -n $dot
-    sleep 2
-    var=$(openstack server show -f value -c status $name)
-done
-echo ""
+bash /mounted/scripts/check_server.sh "$name" "$server"
 
 fixedIp=$(openstack server show $name -f json | jq -r '.addresses' | sed 's/.*=//')
 echo "Fixed IP: $fixedIp"

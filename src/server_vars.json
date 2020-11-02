@@ -38,7 +38,7 @@
     "flavor": "c2-r2-d20",
     "key": "test",
     "sg": "",
-    "ip": "172.16.0.6",
+    "ip": "172.16.0.18",
     "float_ip": "",
     "network": "kub_net",
     "init_file": "master-init.sh"
@@ -49,7 +49,7 @@
     "flavor": "c2-r2-d20",
     "key": "test",
     "sg": "",
-    "ip": "172.16.0.22",
+    "ip": "172.16.0.21",
     "float_ip": "",
     "network": "kub_net",
     "init_file": "node-init.sh"
@@ -60,7 +60,7 @@
     "flavor": "c2-r2-d20",
     "key": "test",
     "sg": "",
-    "ip": "172.16.0.10",
+    "ip": "172.16.0.23",
     "float_ip": "",
     "network": "kub_net",
     "init_file": "node-init.sh"
@@ -71,7 +71,7 @@
     "flavor": "c2-r2-d20",
     "key": "test",
     "sg": "",
-    "ip": "172.16.0.11",
+    "ip": "172.16.0.15",
     "float_ip": "",
     "network": "kub_net",
     "init_file": "node-init.sh"

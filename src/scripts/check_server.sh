@@ -17,6 +17,7 @@ while [ "$var" != "ACTIVE" ];
       then
       echo "Rebuilding $name"
       openstack server delete "$name"
+      sleep 10
       eval "$server"
       i=0
     fi

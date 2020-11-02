@@ -38,18 +38,40 @@
     "flavor": "c2-r2-d20",
     "key": "test",
     "sg": "",
-    "ip": "172.16.0.15",
+    "ip": "172.16.0.6",
     "float_ip": "",
     "network": "kub_net",
     "init_file": "master-init.sh"
   },
   {
-    "name": "node",
+    "name": "node-1",
     "image": "ca4bec1a-ac25-434f-b14c-ad8078ccf39f",
     "flavor": "c2-r2-d20",
     "key": "test",
     "sg": "",
-    "ip": "",
+    "ip": "172.16.0.15",
+    "float_ip": "",
+    "network": "kub_net",
+    "init_file": "node-init.sh"
+  },
+  {
+    "name": "node-2",
+    "image": "ca4bec1a-ac25-434f-b14c-ad8078ccf39f",
+    "flavor": "c2-r2-d20",
+    "key": "test",
+    "sg": "",
+    "ip": "172.16.0.19",
+    "float_ip": "",
+    "network": "kub_net",
+    "init_file": "node-init.sh"
+  },
+  {
+    "name": "node-3",
+    "image": "ca4bec1a-ac25-434f-b14c-ad8078ccf39f",
+    "flavor": "c2-r2-d20",
+    "key": "test",
+    "sg": "",
+    "ip": "172.16.0.9",
     "float_ip": "",
     "network": "kub_net",
     "init_file": "node-init.sh"
