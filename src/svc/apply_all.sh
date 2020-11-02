@@ -11,4 +11,4 @@ kubectl apply -f "$HOME"/svc/postersvc/postconf.yaml
 sleep 1
 kubectl apply -f "$HOME"/svc/frontend/webconf.yaml
 sleep 1
-#kubectl apply -f "$HOME"/svc/proxy/proxyconf.yaml
+kubectl apply -f "$HOME"/svc/proxy/proxyconf.yaml
