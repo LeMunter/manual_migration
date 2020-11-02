@@ -1,22 +1,23 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: loginsvc
+  name: websvc
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: loginsvc
+      app: websvc
   template:
     metadata:
       labels:
-        app: loginsvc
+        app: websvc
     spec:
       containers:
-        - name: loginsvc
-          image: 172.16.10.5:5000/loginsvc
+        - name: websvc
+          image: 172.16.0.18:5000/websvc
           ports:
-            - containerPort: 7070
+            - containerPort: 7080
           envFrom:
             - configMapRef:
                 name: cm
@@ -31,10 +32,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: loginsvc-rest
+  name: websvc-rest
 spec:
   selector:
-    app: loginsvc
+    app: websvc
   ports:
     - protocol: TCP
-      port: 7070
+      port: 7080

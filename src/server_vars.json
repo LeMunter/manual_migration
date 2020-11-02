@@ -75,5 +75,16 @@
     "float_ip": "",
     "network": "kub_net",
     "init_file": "node-init.sh"
+  },
+  {
+    "name": "proxy",
+    "image": "",
+    "flavor": "",
+    "key": "test",
+    "sg": "",
+    "ip": "",
+    "float_ip": "194.47.177.169",
+    "network": "kub_net",
+    "init_file": ""
   }
 ]
