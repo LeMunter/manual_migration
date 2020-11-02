@@ -8,6 +8,6 @@
   },
   "storage-driver": "overlay2",
   "insecure-registries": [
-    "172.16.0.10:5000"
+    "172.16.10.5:5000"
   ]
 }

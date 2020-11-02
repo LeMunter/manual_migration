@@ -1,6 +1,7 @@
 #!/bin/bash
 
 server_vars="$1"
+os_vars="$2"
 if test -z "$server_vars"
 then
   echo "Must provide server variables"
@@ -14,18 +15,8 @@ flavor=$(jq -r '.[] | select(."name" == "gw") | ."flavor"' "$server_vars")
 image=$(jq -r '.[] | select(."name" == "gw") | ."image"' "$server_vars")
 initFile=$(jq -r '.[] | select(."name" == "gw") | ."init_file"' "$server_vars")
 key=$(jq -r '.[] | select(."name" == "gw") | ."key"' "$server_vars")
-network=$(jq -r '.[] | select(."name" == "gw") | ."network"' "$server_vars")
-
-#Check if a ssh security already exists. Otherwise creating one
-sg=$(openstack security group list -f json | jq -r '.[] | select(."Name" == "SSH2") | ."Name"')
-if test -z "$sg"
-then
-  echo "Creating new Security Group"
-  sg=$(openstack security group create SSH2 -f json | jq -r '.name')
-  openstack security group rule create SSH2 --protocol tcp --dst-port 22
-fi
-# shellcheck disable=SC2046
-cat <<< $(jq '.[0].sg = "'"$sg"'"' "$server_vars") > "$server_vars"
+network=$(jq -r '.network' "$os_vars")
+sg=$(jq -r '.sg[0]' "$os_vars")
 
 
 echo "Name: $name"
@@ -36,9 +27,6 @@ echo "Init File: $initFile"
 echo "Key: $key"
 echo "Network: $network"
 
-#Remove the old known host (if it exists)
-ssh-keygen -R "$floatIp"
-
 
 echo "Creating server"
 server=$"openstack server create --image $image --flavor $flavor --availability-zone Education --security-group $sg --security-group default --key-name $key --network $network --user-data /mounted/servers/gw/$initFile $name"
@@ -47,7 +35,7 @@ eval $server
 bash /mounted/scripts/check_server.sh "$name" "$server"
 
 #Get fixed ip
-fixedIp=$(openstack server show $name -f json | jq -r '.addresses' | sed 's/.*=//')
+fixedIp=$(openstack server show "$name" -f json | jq -r '.addresses' | sed 's/.*=//')
 echo "Fixed IP: $fixedIp"
 
 #Assing fixed ip to server-variables
@@ -76,5 +64,9 @@ until nc -z -v "$floatIp" 22 ;
   echo "Server is still building.. retrying in 10 seconds"
   sleep 10
 done
+
+#Remove the old known host (if it exists)
+ssh-keygen -R "$floatIp"
+
 echo "Adding known hosts"
 ssh-keyscan -H "$floatIp" >> ~/.ssh/known_hosts

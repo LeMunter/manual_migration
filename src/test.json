@@ -1,0 +1,19 @@
+{
+  "admin_state_up": true,
+  "availability_zone_hints": [
+    "nova"
+  ],
+  "availability_zones": [],
+  "created_at": "2020-11-02T03:35:01Z",
+  "description": "",
+  "external_gateway_info": null,
+  "flavor_id": null,
+  "id": "c8d978f3-8a27-4e63-99a6-4f628581e10d",
+  "name": "pub_router",
+  "project_id": "6da0032ab1ae4ce4a27fec1861372364",
+  "revision_number": 1,
+  "routes": [],
+  "status": "ACTIVE",
+  "tags": [],
+  "updated_at": "2020-11-02T03:35:01Z"
+}
