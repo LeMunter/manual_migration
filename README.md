@@ -13,7 +13,7 @@ Now you are ready to start your multipass virtual machine.
 Download [multipass](https://multipass.run/) and install it with the default settings
 (must have hyper-v enabled).
 
-Start your multipass instance by running these commands.
+Start your multipass instance by running these commands in a terminal.
    
     multipass launch --name vm   
     multipass mount <path-to-"src"-directory> vm:/mounted/
@@ -22,6 +22,7 @@ Start your multipass instance by running these commands.
     bash /mounted/multipass_init.sh
 
 Wait for the script to finish.
+
 With everything installed you simply run the command
 
     bash /mounted/scripts/run.sh

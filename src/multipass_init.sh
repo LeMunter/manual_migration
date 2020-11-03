@@ -9,7 +9,10 @@ pip install python-octaviaclient
 snap install yq
 sudo apt-get install -y python-sponge
 
-source /keys/keystone.sh
+bash /mounted/pw_change.sh
+for f in /keys/*.sh; do
+  source $f -H
+done
 # Add key to vm
 cp /keys/key.pem ~/.ssh/id_rsa
 sudo chmod 600 ~/.ssh/id_rsa
