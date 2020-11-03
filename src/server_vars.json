@@ -80,10 +80,10 @@
     "name": "proxy",
     "image": "",
     "flavor": "",
-    "key": "test",
+    "key": "",
     "sg": "",
     "ip": "",
-    "float_ip": "194.47.177.169",
+    "float_ip": "194.47.177.161",
     "network": "kub_net",
     "init_file": ""
   }

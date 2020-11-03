@@ -35,6 +35,8 @@ floatIp2=$(openstack floating ip create public -f json | jq -r '.floating_ip_add
 cat <<< $(jq '.float_ips[0] = "'"$floatIp1"'"' "$os_vars") > "$os_vars"
 cat <<< $(jq '.float_ips[1] = "'"$floatIp2"'"' "$os_vars") > "$os_vars"
 
+
+export GATEWAY_FLOATING_IP=$floatIp2
 #i=$(jq ".float_ips | length" $os_vars)
 #jq ".float_ips[$i]" $os_vars
 

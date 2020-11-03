@@ -1,41 +1,19 @@
----
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 metadata:
   name: exp
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: exp
   template:
-    metadata:
-      labels:
-        app: exp
     spec:
       containers:
-        - name: exp
-          image: 172.16.0.18:5000/exp
-          ports:
-            - containerPort: 8080
-          envFrom:
-            - configMapRef:
-                name: cm
-          volumeMounts:
-            - mountPath: "/config"
-              name: confvol
-      volumes:
-        - name: confvol
-          configMap:
-            name: cm
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: exp-rest
-spec:
-  selector:
-    app: exp
-  ports:
-    - protocol: TCP
-      port: 8080
+          - name: exp
+            image: 172.16.10.5:5000/exp
+            command:
+              - python
+              - runexp.py
+            ports:
+              - containerPort: 8080
+            envFrom:
+              - configMapRef:
+                  name: cm
+      restartPolicy: Never

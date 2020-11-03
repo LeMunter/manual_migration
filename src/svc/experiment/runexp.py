@@ -2,11 +2,11 @@ import requests
 import json
 import os
 
-login_host = '10.106.110.202'
-login_port = '7070'
+login_host = os.environ.get('LOGIN_SERVER_ADDR')
+login_port = os.environ.get('LOGIN_SERVER_PORT')
 
-poster_host = '10.100.128.199'
-poster_port = '7075'
+poster_host = os.environ.get('POST_SERVER_ADDR')
+poster_port = os.environ.get('POST_SERVER_PORT')
 
 login_svc = f'http://{login_host}:{login_port}'
 poster_svc = f'http://{poster_host}:{poster_port}'
@@ -78,7 +78,7 @@ for sub in jo['submissions']:
     if author not in tokdb:
         tok = login(author, usrdb[author])
         tokdb[author] = tok
-    
+
     post_submission(tokdb[author], sub)
 
 for cmt in jo['comments']:
@@ -86,5 +86,5 @@ for cmt in jo['comments']:
     if author not in tokdb:
         tok = login(author, usrdb[author])
         tokdb[author] = tok
-    
+
     post_comment(tokdb[author], cmt)

@@ -42,8 +42,10 @@ echo "Fixed IP: $fixedIp"
 # shellcheck disable=SC2046
 cat <<< $(jq '.[0].ip ="'"$fixedIp"'"' "$server_vars") > "$server_vars"
 
-#Check to see if there are any free float ips. Create a new otherwise
-floatIp=$(openstack floating ip list -f json | jq -r '.[] | select(."Fixed IP Address" == null) | ."Floating IP Address"' | sed -n 1p)
+#floatIp=$(openstack floating ip list -f json | jq -r '.[] | select(."Fixed IP Address" == null) | ."Floating IP Address"' | sed -n 1p)
+floatIp=$(jq -r '.float_ips[0]' /mounted/os_vars.json)
+
+#Check that the floating ip is not empty
 if test -z "$floatIp"
 then
   echo "Creating new floating IP"
@@ -70,3 +72,5 @@ ssh-keygen -R "$floatIp"
 
 echo "Adding known hosts"
 ssh-keyscan -H "$floatIp" >> ~/.ssh/known_hosts
+
+ssh-copy-id -i ~/.ssh/id_rsa ubuntu@$floatIp

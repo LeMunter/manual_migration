@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 name="$1"
 server="$2"
 

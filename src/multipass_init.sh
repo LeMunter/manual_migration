@@ -9,9 +9,9 @@ pip install python-octaviaclient
 snap install yq
 sudo apt-get install -y python-sponge
 
-source /keys/am223yd-1dv032-ht20-openrc.sh
+source /keys/keystone.sh
 # Add key to vm
-cp /keys/secrets/test.pem ~/.ssh/id_rsa
+cp /keys/key.pem ~/.ssh/id_rsa
 sudo chmod 600 ~/.ssh/id_rsa
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_rsa

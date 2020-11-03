@@ -23,4 +23,8 @@ cat <<< $(sudo cat /mounted/svc/loginsvc/loginsvcconf.yaml | yq w -d0 - spec.tem
 #Update websvc config
 cat <<< $(sudo cat /mounted/svc/frontend/webconf.yaml | yq w -d0 - spec.template.spec.containers[0].image "$dr":5000/websvc) > /mounted/svc/frontend/webconf.yaml
 
+#Update config
 cat <<< $(sudo cat /mounted/svc/config.yaml | yq w -d0 - data.FRONTEND_SERVER_ADDR "$floatIp") > /mounted/svc/config.yaml
+
+#Update exp config
+cat <<< $(sudo cat /mounted/svc/experiment/exconf.yaml | yq w -d0 - spec.template.spec.containers[0].image "$dr":5000/exp) > /mounted/svc/experiment/exconf.yaml

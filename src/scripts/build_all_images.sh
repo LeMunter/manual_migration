@@ -9,6 +9,7 @@ mariadb=$(sudo cat /mounted/svc/mariadb/dbconf.yaml | yq r -d2 - spec.template.s
 poster=$(sudo cat /mounted/svc/postersvc/postconf.yaml | yq r -d0 - spec.template.spec.containers[0].image)
 login=$(sudo cat /mounted/svc/loginsvc/loginsvcconf.yaml | yq r -d0 - spec.template.spec.containers[0].image)
 websvc=$(sudo cat /mounted/svc/frontend/webconf.yaml | yq r -d0 - spec.template.spec.containers[0].image)
+exp=$(sudo cat /mounted/svc/experiment/exconf.yaml | yq r -d0 - spec.template.spec.containers[0].image)
 
 ssh -J "$hostIP" "$remoteIP" /bin/bash << HERE
     sudo docker build "$HOME"/svc/mariadb --tag $mariadb
@@ -19,4 +20,6 @@ ssh -J "$hostIP" "$remoteIP" /bin/bash << HERE
     sudo docker push $login
     sudo docker build "$HOME"/svc/frontend --tag $websvc
     sudo docker push $websvc
+    sudo docker build "$HOME"/svc/experiment --tag $exp
+    sudo docker push $exp
 HERE
