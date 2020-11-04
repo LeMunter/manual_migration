@@ -39,7 +39,7 @@ The script takes a while to complete so just be patient.
 Everything should now be up and running, and you should be able to access the page with the IP address from before. 
  
 
-## Walkthrough
+## Script Walkthrough
 
 ### Network
 The first thing that happens in the script is the creation of the network, subnetwork and all the miscellaneous services needed later. These include the security groups for SSH (port22),HTTP (port 80) and two floating IPs. The names of all services and IP addresses are saved in a  json file called os_vars.json.
