@@ -67,3 +67,5 @@ Now all necessary files for our deployments are moved to the master server. The 
 With this done everything should now work inside the local network.
 #### Load Balancer
 The last step is the load balancer which balances the traffic among three proxy-servers using round robin. Theses proxy-servers have a nodeport service connected, enabling them to communicate outside the cluster. These proxy-servers in turn distributes the traffic to the websvc- pods using local dns addresses.  This dual-layer balancing creates redundancy and a great amount of spread of traffic.
+#### Reflections
+My goal with this project was to challenge myself and create scripts automating the entire project. I think I achieved this for the most part. The one thing missing is the automated creation of the load balancer. This is because I could not get the extension Octavia for openstack to work for some reason. Other than that, everything is automated and some of the scripts included make the effort of updating the Kubernetes object a breeze. I have also learned a great deal about shell scripting (enough for me to really appreciate the greatness of ansible), and kubernetes along the process.
