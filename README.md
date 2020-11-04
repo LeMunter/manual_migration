@@ -17,7 +17,7 @@ Start your multipass instance by running these commands in a terminal.
     multipass mount <path-to-secrets-directory> vm:/keys
     multipass shell vm
     
-When in the vm shell, simply run this command to create all servers.
+When in the vm shell, simply run this command to create the project.
     
     bash /mounted/multipass_init.sh
 
