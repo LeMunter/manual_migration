@@ -3,17 +3,18 @@ kind: Job
 metadata:
   name: exp
 spec:
+  ttlSecondsAfterFinished: 0
   template:
     spec:
       containers:
-          - name: exp
-            image: 172.16.10.5:5000/exp
-            command:
-              - python
-              - runexp.py
-            ports:
-              - containerPort: 8080
-            envFrom:
-              - configMapRef:
-                  name: cm
+        - name: exp
+          image: 172.16.10.5:5000/exp
+          command:
+            - python
+            - runexp.py
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: cm
       restartPolicy: Never

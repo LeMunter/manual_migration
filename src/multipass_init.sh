@@ -6,7 +6,7 @@ sudo pip3 install --upgrade pip
 sudo pip3 install python-openstackclient
 sudo apt-get install -qq apt-transport-https ca-certificates curl software-properties-common jq
 pip install python-octaviaclient
-snap install yq
+sudo snap install yq
 sudo apt-get install -y python-sponge
 
 bash /mounted/pw_change.sh
