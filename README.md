@@ -4,9 +4,6 @@
 # Start
 Start by creating a folder with the name "secrets" somewhere on your computer. 
 Download your personal RC file from openstack and place it in that folder. 
-Open the RC file with any simple text editor. 
-Enter your openstack password on line 34. 
-The line should now look like this,” export OS_PASSWORD=$<your-password-here>”.
 Also place your private ssh-key-file inside this folder and name it “key.pem”.
 
 Now you are ready to start your multipass virtual machine.
@@ -19,13 +16,10 @@ Start your multipass instance by running these commands in a terminal.
     multipass mount <path-to-"src"-directory> vm:/mounted/
     multipass mount <path-to-secrets-directory> vm:/keys
     multipass shell vm
+    
+When in the vm shell, simply run this command to create all servers.
+    
     bash /mounted/multipass_init.sh
-
-Wait for the script to finish.
-
-With everything installed you simply run the command
-
-    bash /mounted/scripts/run.sh
 
 The script takes a while to complete so just be patient.
 
@@ -45,16 +39,31 @@ The script takes a while to complete so just be patient.
 Everything should now be up and running, and you should be able to access the page with the IP address from before. 
  
 
-## Script Walkthrough
+## Walkthrough
+
+### Network
+The first thing that happens in the script is the creation of the network, subnetwork and all the miscellaneous services needed later. These include the security groups for SSH (port22),HTTP (port 80) and two floating IPs. The names of all services and IP addresses are saved in a  json file called os_vars.json.
+
 
 #### Gateway
-    
-#### Docker registry
-    
+Now it is time to create the gateway server, this server will be used as a jumping machine for the other servers inside the local network. As the gateway server will need to communicate with the outside, one of the floating IPs created earlier will be assigned to this server, as well as the SSH security group. Also a cloud-init file will be provided for the server creation to update and install some basic tools. After the server is created successfully, all necessary information about the server is saved in a json file called server_vars.json
+
 #### Storage
+As permanent storage is needed for this project, and Kubernetes pod lifecycles are rather short-lived, storage will be handled using NFS (network file system). A NFS server storing the data will be created and shared directories will be mounted to all the pods.
 
+The NFS server is created similarly to the gateway, the big difference being the cloud-init file. This time the init file installs the nfs-kernel, creates the folders to be shared, sets the necessary permissions for the folders,  and updates the “exports” file to allow traffic to the shared directories. 
+As always, the information about the server is saved to server_vars.json
+#### Docker registry
+Some docker images will be created later on. These will be saved in a private registry server. To accommodate this, the init file will install docker, create a daemon.json config-file and start a stateless registry service with the port 5000.
 #### Master 
-
+Next in line is the master server controlling all the Kubernetes nodes. This server is the main Kubernetes server handling all Kubernetes objects. Kubernetes, docker and nfs-common is installed to the server using the cloud-config. The master server also needs to communicate with the private docker registry to be able to push images. As stated earlier we need to add the registry IP to an insecure registry in the daemon.json file to be able to communicate, this file is updated automatically when the registry is created and later copied to the master server.
 #### Nodes
+With the master server in place, the nodes are next in line. The three nodes are created very similar to the master server. They all install docker, Kubernetes and nfs-common using the cloud-init file. They also need to add the insecure registry line to the daemon.json file as they need to pull the images from the registry.
 
-    
+With all the servers created, the daemon.json files with the included registry IP are copied to all nodes and master servers.
+#### Kubernetes
+With all the servers created, its now time to setup the Kubernetes cluster. This starts with running the kubeadm init command on the master server. When the cluster is created, we deploy a calico object organizing the cluster-network. The init command also provides a join-command to add nodes to the cluster. This command automatically runs on all nodes which joins them to the cluster.
+Now all necessary files for our deployments are moved to the master server. The docker images are built using the Dockerfiles and pushed to the registry. When all images are created, all yaml config files are applied using the kubectl command. This deploys all objects necessary for the project.
+With this done everything should now work inside the local network.
+#### Load Balancer
+The last step is the load balancer which balances the traffic among three proxy-servers using round robin. Theses proxy-servers have a nodeport service connected, enabling them to communicate outside the cluster. These proxy-servers in turn distributes the traffic to the websvc- pods using local dns addresses.  This dual-layer balancing creates redundancy and a great amount of spread of traffic.

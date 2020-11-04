@@ -38,4 +38,5 @@ then
   echo "Creating new floating IP"
   floatIp=$(openstack floating ip create public -f json | jq '.floating_ip_address')
 fi
+#Add the floating ip to the proxy
 cat <<< $(jq '.[7].float_ip = "'"$floatIp"'"' "$server_vars") > "$server_vars" &&

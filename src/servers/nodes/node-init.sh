@@ -5,7 +5,7 @@ apt update
 apt upgrade -y
 
 # Installera paket som är nödvändiga eller bra att ha
-apt-get install -qq apt-transport-https ca-certificates curl software-properties-common jq
+apt-get install -qq apt-transport-https ca-certificates curl software-properties-common
 
 # Hämta och lägg till nycklar för docker och k8s
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -

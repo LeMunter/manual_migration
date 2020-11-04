@@ -15,8 +15,6 @@ curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 add-apt-repository -yu "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
 add-apt-repository -yu "deb https://apt.kubernetes.io/ kubernetes-xenial main"
 
-# Installera nödvändiga paket
-apt-get install -qq docker-ce kubelet kubeadm kubectl nfs-common
 
 # Ändra så att docker använder systemd
 cat <<EOF | sudo tee /etc/docker/daemon.json
@@ -33,10 +31,6 @@ EOF
 
 sudo mkdir -p /etc/systemd/system/docker.service.d
 
-# Starta om och autostata docker
-systemctl daemon-reload
-systemctl restart docker
-systemctl enable docker
 
 #Create export folders and set permissions
 mkdir -p /export/kubedata/mongo
